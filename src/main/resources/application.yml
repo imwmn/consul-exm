@@ -1,21 +1,21 @@
 spring:
   cloud:
     consul:
-      host: 114.55.141.187
+      host: 127.0.0.1
       port: 8500
       discovery:
         #healthCheckPath: ${management.contextPath}/health
         heartbeat:
           enabled: true
-          interval-ratio: 0.8
         #healthCheckPath: /health
         healthCheckInterval: 15s
-        instance-id:  ${spring.application.name}-${random.int[10000,99999]}
+#        instance-id:  ${spring.application.name}-${random.int[10000,99999]}
         enabled: true
         health-check-path: /actuator/health
+        service-name: service-producer
       enabled: true
   application:
     name: spring-cloud-consul-producer
 server:
-  port: 8081
+  port: 8888
 

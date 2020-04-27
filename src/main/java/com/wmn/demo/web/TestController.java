@@ -1,7 +1,9 @@
 package com.wmn.demo.web;
 
+import com.netflix.hystrix.contrib.javanica.annotation.HystrixCommand;
 import com.wmn.demo.config.StudentConfig;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.web.server.LocalServerPort;
 import org.springframework.core.env.Environment;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -13,11 +15,11 @@ import org.springframework.web.bind.annotation.RestController;
  * @Date: 2020/4/3 11:29
  */
 @RestController
-@RequestMapping("/test")
+
 public class TestController {
 
-//    @Value("${myName}")
-//    private String myName;
+    @Value("${myName}")
+    private String myName;
 
     @Autowired
     private StudentConfig studentConfig;
@@ -38,6 +40,7 @@ public class TestController {
     @RequestMapping("/config")
     public String testConfig(){
         System.out.println(studentConfig.toString());
+        System.out.println(myName);
         return studentConfig.toString();
     }
 
@@ -52,5 +55,15 @@ public class TestController {
         return "hello consul from "+getPort();
     }
 
+    @GetMapping("/home")
+    @HystrixCommand(fallbackMethod = "hystrixHello")
+    public String call(){
+        //throw   new RuntimeException("111");
+        return "测试";
+    }
+
+    public  String hystrixHello(){
+        return "当前服务故障，服务熔断已启动！";
+    }
 
 }
